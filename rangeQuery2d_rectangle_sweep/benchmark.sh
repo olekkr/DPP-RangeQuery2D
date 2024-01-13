@@ -1,4 +1,4 @@
-# /usr/bin/sh
+#!/usr/bin/sh
 echo "\n--------------------------------------------------"
 echo "Command line for benchmarking : 'futhark bench --backend=c rangeQuery2d_rect_sweep.fut' "
 futhark bench --backend=c rangeQuery2d_rect_sweep.fut
@@ -9,4 +9,5 @@ echo "Command line for benchmarking : 'futhark bench --backend=opencl rangeQuery
 futhark bench --backend=opencl rangeQuery2d_rect_sweep.fut
 echo "--------------------------------------------------\n"
 
-# rm rangeQuery2d_rect_sweep.c rangeQuery2d_rect_sweep  && rm -r data
+# rm rangeQuery2d_rect_sweep.c rangeQuery2d_rect_sweep
+# rm -r data

@@ -180,12 +180,12 @@ def debug_Pd = down_sweep r P
 -- ==
 -- entry: bench_rangeQuery2d
 -- "n=10 m=10" compiled script input { mk_inputs 10i64 10i64 }
--- "n=100 m=10" compiled script input { mk_inputs 100i64 10i64 }
 -- "n=10 m=100" compiled script input { mk_inputs 10i64 100i64 }
+-- "n=100 m=10" compiled script input { mk_inputs 100i64 10i64 }
 -- "n=100 m=100" compiled script input { mk_inputs 100i64 100i64 }
--- "n=1_000 m=1_000" compiled script input { mk_inputs 1000i64 1000i64 }
 -- "n=10 m=1_000" compiled script input { mk_inputs 10i64 1000i64 }
 -- "n=1_000 m=10" compiled script input { mk_inputs 1000i64 10i64 }
+-- "n=1_000 m=1_000" compiled script input { mk_inputs 1000i64 1000i64 }
 -- "n=10 m=10_000" compiled script input { mk_inputs 10i64 10000i64 }
 -- "n=10_000 m=10" compiled script input { mk_inputs 10000i64 10i64 }
 -- "n=10_000 m=10_000" compiled script input { mk_inputs 10000i64 10000i64 }
@@ -219,7 +219,6 @@ entry bench_rangeQuery2d [m] [n] (rectangles : [m]Rectangle) (points : [n]Point)
     let solution = map(\r -> nb_points_in_rectangle r points) rectangles
     in solution
 
-
 -- --------------------------------------------------
 -- Command line for benchmarking : 'futhark bench --backend=c rangeQuery2d_rect_sweep.fut' 
 -- Compiling rangeQuery2d_rect_sweep.fut...
@@ -227,16 +226,16 @@ entry bench_rangeQuery2d [m] [n] (rectangles : [m]Rectangle) (points : [n]Point)
 -- More runs automatically performed for up to 300s to ensure accurate measurement.
 
 -- rangeQuery2d_rect_sweep.fut:bench_rangeQuery2d (no tuning file):
--- n=10 m=10:                  1μs (95% CI: [       0.6,        0.7])
--- n=100 m=10:                 4μs (95% CI: [       3.7,        3.8])
+-- n=10 m=10:                  1μs (95% CI: [       0.6,        0.6])
 -- n=10 m=100:                 4μs (95% CI: [       3.6,        3.6])
--- n=100 m=100:               35μs (95% CI: [      34.4,       34.7])
--- n=1_000 m=1_000:         5732μs (95% CI: [    5683.7,     5897.6])
--- n=10 m=1_000:              41μs (95% CI: [      40.6,       42.3])
--- n=1_000 m=10:              34μs (95% CI: [      33.8,       34.2])
--- n=10 m=10_000:            633μs (95% CI: [     629.1,      637.4])
--- n=10_000 m=10:            634μs (95% CI: [     627.4,      642.5])
--- n=10_000 m=10_000:     341101μs (95% CI: [  330622.5,   372403.2])
+-- n=100 m=10:                 4μs (95% CI: [       3.5,        3.6])
+-- n=100 m=100:               35μs (95% CI: [      34.6,       35.0])
+-- n=10 m=1_000:              33μs (95% CI: [      33.3,       33.4])
+-- n=1_000 m=10:              36μs (95% CI: [      35.6,       35.8])
+-- n=1_000 m=1_000:         5257μs (95% CI: [    5255.0,     5261.0])
+-- n=10 m=10_000:            629μs (95% CI: [     626.6,      633.3])
+-- n=10_000 m=10:            593μs (95% CI: [     588.2,      598.7])
+-- n=10_000 m=10_000:     329823μs (95% CI: [  329176.2,   331015.9])
 -- --------------------------------------------------
 
 
@@ -247,14 +246,14 @@ entry bench_rangeQuery2d [m] [n] (rectangles : [m]Rectangle) (points : [n]Point)
 -- More runs automatically performed for up to 300s to ensure accurate measurement.
 
 -- rangeQuery2d_rect_sweep.fut:bench_rangeQuery2d (no tuning file):
--- n=10 m=10:                 44μs (95% CI: [      38.5,       52.4])
--- n=100 m=10:                53μs (95% CI: [      47.1,       60.0])
--- n=10 m=100:                36μs (95% CI: [      31.4,       41.9])
--- n=100 m=100:               41μs (95% CI: [      36.2,       48.1])
--- n=1_000 m=1_000:          205μs (95% CI: [     192.7,      221.3])
--- n=10 m=1_000:              47μs (95% CI: [      41.7,       54.2])
--- n=1_000 m=10:              37μs (95% CI: [      32.3,       44.2])
--- n=10 m=10_000:             65μs (95% CI: [      57.7,       73.8])
--- n=10_000 m=10:             79μs (95% CI: [      71.6,       87.1])
--- n=10_000 m=10_000:       9321μs (95% CI: [    8877.6,     9846.1])
+-- n=10 m=10:                 33μs (95% CI: [      28.0,       39.3])
+-- n=10 m=100:                39μs (95% CI: [      34.0,       45.0])
+-- n=100 m=10:                38μs (95% CI: [      33.6,       44.2])
+-- n=100 m=100:               43μs (95% CI: [      37.5,       49.3])
+-- n=10 m=1_000:              38μs (95% CI: [      33.5,       45.0])
+-- n=1_000 m=10:              41μs (95% CI: [      35.2,       48.5])
+-- n=1_000 m=1_000:          186μs (95% CI: [     176.3,      198.0])
+-- n=10 m=10_000:             52μs (95% CI: [      46.6,       58.7])
+-- n=10_000 m=10:             64μs (95% CI: [      58.1,       71.6])
+-- n=10_000 m=10_000:       9378μs (95% CI: [    8850.6,    10309.9])
 -- --------------------------------------------------
