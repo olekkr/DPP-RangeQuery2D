@@ -135,47 +135,9 @@ def rangeQuery2d [m] [n] (rectangles : [m]Rectangle) (points : [n]Point) : [m]i6
 
 
 
--- ### TEST UNIT : rangeQuery2d ### --
-
--- Types definitions
--- type Point = (f64, f64)                     -- (x, y)
--- type Rectangle = (Point, Point)             -- (ll, ur)
-
--- Points outside the rectangle
-def p1 : Point = {x = 2.5,y = 5}        -- on the left
-def p2 : Point = {x = 5, y = 2.5}       -- above
-def p3 : Point = {x = 7.5, y = 5}       -- on the right
-def p4 : Point = {x = 5, y = 7.5}       -- under
-
--- Points on the edge of the rectangle
-def p5 : Point = {x = 4, y = 5}         -- on the left edge
-def p6 : Point = {x = 5, y = 4}         -- on the upper edge
-def p7 : Point = {x = 6, y = 5}         -- on the right edge
-def p8 : Point = {x = 5, y = 6}         -- on the bottom edge
-
--- Points in the rectangle
-def p9 : Point = {x = 5, y = 5}         -- in the middle of the rectangle
-
-def ll : Point = {x = 4, y = 6}         -- lower left corner
-def ur : Point = {x = 6, y = 4}         -- upper right corner
-def r : Rectangle = {ll = ll, ur = ur}
 
 
-def R : []Rectangle = [r]
-def P : []Point = [p1, p2, p3, p4, p5, p6, p7, p8, p9] 
 
-def Pl = left_elimination r P
-def Pr = right_elimination r P
-def Pu = up_elimination r P
-def Pd = down_elimination r P
-def result = rangeQuery2d R P
-
-
-def expected__Pl : []i64 = [0, -1, -1, -1, -1, -1, -1, -1, -1]
-def expected__Pr : []i64 = [-1, -1, 2, -1, -1, -1, -1, -1, -1]
-def expected__Pu : []i64 = [-1, 1, -1, -1, -1, -1, -1, -1, -1]
-def expected__Pd : []i64 = [-1, -1, -1, 3, -1, -1, -1, -1, -1]
-def expected_result : []i64 = [5]
 
 -- ### BENCHMARKING UNIT : rangeQuery2d ### --
 
@@ -183,16 +145,30 @@ def expected_result : []i64 = [5]
 -- ==
 -- entry: bench_rangeQuery2d
 -- "n=10 m=10" compiled script input { mk_inputs 10i64 10i64 }
--- "n=10 m=100" compiled script input { mk_inputs 10i64 100i64 }
--- "n=100 m=10" compiled script input { mk_inputs 100i64 10i64 }
 -- "n=100 m=100" compiled script input { mk_inputs 100i64 100i64 }
--- "n=10 m=1_000" compiled script input { mk_inputs 10i64 1000i64 }
--- "n=1_000 m=10" compiled script input { mk_inputs 1000i64 10i64 }
 -- "n=1_000 m=1_000" compiled script input { mk_inputs 1000i64 1000i64 }
--- "n=10 m=10_000" compiled script input { mk_inputs 10i64 10000i64 }
--- "n=10_000 m=10" compiled script input { mk_inputs 10000i64 10i64 }
 -- "n=10_000 m=10_000" compiled script input { mk_inputs 10000i64 10000i64 }
+-- "n=100_000 m=100_000" compiled script input { mk_inputs 100000i64 100000i64 }
+-- "n=1_000_000 m=1_000_000" compiled script input { mk_inputs 1000000i64 1000000i64 }
+-- "n=10 m=100_000" compiled script input { mk_inputs 10i64 100000i64 }
+-- "n=100_000 m=10" compiled script input { mk_inputs 100000i64 10i64 }
 
+--------------------------------------------------
+-- Command line for benchmarking : 'futhark bench --backend=opencl Bench_Par_rangeQuery2d_point_elimination.fut' 
+-- Compiling Bench_Par_rangeQuery2d_point_elimination.fut...
+-- Reporting arithmetic mean runtime of at least 10 runs for each dataset (min 0.5s).
+-- More runs automatically performed for up to 300s to ensure accurate measurement.
+
+-- Bench_Par_rangeQuery2d_point_elimination.fut:bench_rangeQuery2d (no tuning file):
+-- n=10 m=10:                                        21μs (95% CI: [      19.3,       23.1])
+-- n=100 m=100:                                      25μs (95% CI: [      23.3,       26.8])
+-- n=1_000 m=1_000:                                1455μs (95% CI: [    1373.9,     1541.4])
+-- n=10_000 m=10_000:                             14333μs (95% CI: [   13573.3,    15569.8])
+-- n=100_000 m=100_000:                         2041201μs (95% CI: [ 1432170.7,  2646624.6])
+-- n=1_000_000 m=1_000_000:                    86739383μs (95% CI: [82998608.0, 92271116.3])
+-- n=10 m=100_000:                                 1063μs (95% CI: [    1228.7,     1356.0])
+-- n=100_000 m=10:                                 1510μs (95% CI: [     990.6,     1187.4])
+--------------------------------------------------
 
 -- TODO? : Randomize this function
 def mk_point : Point  = 
@@ -217,6 +193,10 @@ entry mk_inputs (m : i64) (n : i64) : ([]Rectangle, []Point) =
     let rs = mk_rects m
     let ps = mk_points n
     in (rs, ps)
+
+entry mk_inputs_pbbs (n : i64) : ([]Rectangle, []Point) = 
+    let m = 2 * (n/3)
+    in mk_inputs (m/2) (n-m)
 
 entry bench_rangeQuery2d [m] [n] (rectangles : [m]Rectangle) (points : [n]Point) : [m]i64 =
     let solution = map(\r -> nb_points_in_rectangle r points) rectangles

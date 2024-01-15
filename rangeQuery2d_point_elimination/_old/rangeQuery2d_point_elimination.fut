@@ -2,7 +2,7 @@
 -- x is going to the right
 -- y is going down
 
--- ### TEST DEFINITIONS ### --
+-- ### TYPE DEFINITIONS ### --
 type Point = {x : f64, y : f64}
 type Rectangle = {ll : Point, ur : Point}
 
@@ -132,6 +132,56 @@ def rangeQuery2d [m] [n] (rectangles : [m]Rectangle) (points : [n]Point) : [m]i6
     let solution = map(\r -> nb_points_in_rectangle r points) rectangles
     in solution
 
+
+
+
+
+
+-- ### TEST UNIT : rangeQuery2d ### --
+
+-- Types definitions
+-- type Point = (f64, f64)                     -- (x, y)
+-- type Rectangle = (Point, Point)             -- (ll, ur)
+
+-- Points outside the rectangle
+def p1 : Point = {x = 2.5,y = 5}        -- on the left
+def p2 : Point = {x = 5, y = 2.5}       -- above
+def p3 : Point = {x = 7.5, y = 5}       -- on the right
+def p4 : Point = {x = 5, y = 7.5}       -- under
+
+-- Points on the edge of the rectangle
+def p5 : Point = {x = 4, y = 5}         -- on the left edge
+def p6 : Point = {x = 5, y = 4}         -- on the upper edge
+def p7 : Point = {x = 6, y = 5}         -- on the right edge
+def p8 : Point = {x = 5, y = 6}         -- on the bottom edge
+
+-- Points in the rectangle
+def p9 : Point = {x = 5, y = 5}         -- in the middle of the rectangle
+
+def ll : Point = {x = 4, y = 6}         -- lower left corner
+def ur : Point = {x = 6, y = 4}         -- upper right corner
+def r : Rectangle = {ll = ll, ur = ur}
+
+
+def R : []Rectangle = [r]
+def P : []Point = [p1, p2, p3, p4, p5, p6, p7, p8, p9] 
+
+def Pl = left_elimination r P
+def Pr = right_elimination r P
+def Pu = up_elimination r P
+def Pd = down_elimination r P
+def result = rangeQuery2d R P
+
+
+def expected__Pl : []i64 = [0, -1, -1, -1, -1, -1, -1, -1, -1]
+def expected__Pr : []i64 = [-1, -1, 2, -1, -1, -1, -1, -1, -1]
+def expected__Pu : []i64 = [-1, 1, -1, -1, -1, -1, -1, -1, -1]
+def expected__Pd : []i64 = [-1, -1, -1, 3, -1, -1, -1, -1, -1]
+def expected_result : []i64 = [5]
+
+
+
+
 -- ### BENCHMARKING UNIT : rangeQuery2d ### --
 
 -- BENCHMARKING rangeQuery2d.
@@ -141,12 +191,20 @@ def rangeQuery2d [m] [n] (rectangles : [m]Rectangle) (points : [n]Point) : [m]i6
 -- "n=100 m=100" compiled script input { mk_inputs 100i64 100i64 }
 -- "n=1_000 m=1_000" compiled script input { mk_inputs 1000i64 1000i64 }
 -- "n=10_000 m=10_000" compiled script input { mk_inputs 10000i64 10000i64 }
--- "n=100_000 m=100_000" compiled script input { mk_inputs 100000i64 100000i64 }
--- "n=1_000_000 m=1_000_000" compiled script input { mk_inputs 1000000i64 1000000i64 }
--- "n=10_000_000 m=10_000_000" compiled script input { mk_inputs 10000000i64 10000000i64 }
--- "n=10 m=100_000" compiled script input { mk_inputs 10i64 100000i64 }
--- "n=100_000 m=10" compiled script input { mk_inputs 100000i64 10i64 }
 
+
+-- --------------------------------------------------
+-- Command line for benchmarking : 'futhark bench --backend=c rangeQuery2d_point_elimination.fut' 
+-- Compiling rangeQuery2d_point_elimination.fut...
+-- Reporting arithmetic mean runtime of at least 10 runs for each dataset (min 0.5s).
+-- More runs automatically performed for up to 300s to ensure accurate measurement.
+
+-- rangeQuery2d_point_elimination.fut:bench_rangeQuery2d (no tuning file):
+-- n=10 m=10:                  0μs (95% CI: [       0.4,        0.4])
+-- n=100 m=100:               21μs (95% CI: [      20.9,       21.0])
+-- n=1_000 m=1_000:         2022μs (95% CI: [    2007.3,     2041.8])
+-- n=10_000 m=10_000:     195190μs (95% CI: [  194830.0,   195905.5])
+-- --------------------------------------------------
 
 -- TODO? : Randomize this function
 def mk_point : Point  = 
@@ -172,6 +230,7 @@ entry mk_inputs (m : i64) (n : i64) : ([]Rectangle, []Point) =
     let ps = mk_points n
     in (rs, ps)
 
-entry bench_rangeQuery2d [m] [n] (rectangles : [m]Rectangle) (points : [n]Point) : [m]i64 =
-    let solution = map(\r -> nb_points_in_rectangle r points) rectangles
-    in solution
+    entry bench_rangeQuery2d [m] [n] (rectangles : [m]Rectangle) (points : [n]Point) : [m]i64 =
+        let solution = map(\r -> nb_points_in_rectangle r points) rectangles
+        in solution
+
