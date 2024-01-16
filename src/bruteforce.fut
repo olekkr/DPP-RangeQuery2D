@@ -11,7 +11,7 @@ def within (p:Point) (r:Rectangle) : bool =
             p.1 >= r.1.1
 
    
-def get_counts [n] [m] (points: [n]Point) (rects: [m]Rectangle): [m]i64 = 
+def rangeQuery2d [n] [m] (points: [n]Point) (rects: [m]Rectangle): [m]i64 = 
     let counts = replicate m 0 
     let res = loop (new_counts, r) = (counts, 0) for r < m do 
         let (count, _) = loop (acc, p) = (0, 0) for p < n do  
@@ -49,7 +49,7 @@ def r : Rectangle = (ll,ur)
 
 def R : []Rectangle = [r]
 def P : []Point = [p1, p2, p3, p4, p5, p6, p7, p8, p9] 
-def result = get_counts P R
+def result = rangeQuery2d P R
 
 
 -- def debug_Pl = left_sweep r P
@@ -100,7 +100,7 @@ entry mk_inputs (m : i64) (n : i64) : ([]Rectangle, []Point) =
     in (rs, ps)
 
 entry bench_rangeQuery2d [m] [n] (rectangles : [m]Rectangle) (points : [n]Point) : [m]i64 =
-    let solution = get_counts points rectangles
+    let solution = rangeQuery2d points rectangles
     in solution
 
 
