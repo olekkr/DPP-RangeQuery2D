@@ -1,0 +1,4 @@
+#!/usr/bin/sh
+
+rm rangeQuery2d_point_elimination.c rangeQuery2d_point_elimination
+rm Bench_Par_rangeQuery2d_point_elimination.c Bench_Par_rangeQuery2d_point_elimination
