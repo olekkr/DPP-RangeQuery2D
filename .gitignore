@@ -1,3 +1,13 @@
+src/*.c
+src/benchmark_all
+src/bruteforce
+src/bruteforce_parallel
+src/rangeQuery2d_quadtree
+src/rangeQuery2d_pt_elim
+
 rangeQuery2d_point_elimination/InputData/*
 rangeQuery2d_quadtree/InputData/*
 *.jpeg
+
+InputData/*
+
