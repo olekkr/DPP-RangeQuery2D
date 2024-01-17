@@ -5,9 +5,6 @@ CFLAGS?=-Wall -Wextra -pedantic -O3
 
 COMMON = common/IO.h common/parse_command_line.h common/geometry.h common/geometryIO.h parlay/parallel.h parlay/primitives.h
 
-
-all: pbbs2fut fut2pbbs
-
 # converter
 pbbs2fut: pbbs2fut.c
 	$(CC) -o $@ $(CFLAGS) $^
@@ -16,7 +13,7 @@ pbbs2fut: pbbs2fut.c
 
 # randpoints 
 randPoints : randPoints.C geometryData.h $(COMMON) 
-	$(CC) $(CFLAGS) $(LFLAGS) -o $@ $@.C
+	g++ -DHOMEGROWN -pthread -mcx16 -O2 -g -std=c++17 -DNDEBUG -I . -DHOMEGROWN -pthread -ldl -L/usr/lib -ljemalloc -o  $@ $@.C
 
 
 # datasets
