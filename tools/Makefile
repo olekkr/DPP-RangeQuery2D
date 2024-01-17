@@ -49,4 +49,4 @@ fut_2DinCube_%.in : 2DinCube_% pbbs2fut
 
 
 bench_all : fut_2DinCube_1000000.in fut_2Dkuzmin_1000000.in
-	cd ../src;	pwd; futhark bench -r 1 benchmark_all.fut
+	cd ../src; futhark bench -r 1 --backend=multicore benchmark_all.fut
