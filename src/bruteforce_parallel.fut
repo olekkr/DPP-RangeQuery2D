@@ -14,5 +14,5 @@ def points_in_rect [n] (points: [n]Point) (rect: Rectangle): i64 =
     reduce (+) 0 (map (\p -> if within p rect then 1 else 0) points)
 
 def rangeQuery2d [n] [m] (points: [n]Point) (rects: [m]Rectangle): [m]i64 =
-    map (\rect:Rectangle -> points_in_rect points rect) rects
+    map (points_in_rect points) rects
 
