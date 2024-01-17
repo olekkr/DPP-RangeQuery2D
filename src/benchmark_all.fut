@@ -48,6 +48,6 @@ entry bench_point_quad_tree [n_in] (points_in : [n_in][2]f64) : []i64 =
 -- ### BENCHMARKING UNIT ### --
 -- ==
 -- entry: bench_simple_parallel bench_point_elimination bench_point_quad_tree 
--- "2DinCube (small)" input @ InputData/fut_2DinCube_1000000.in
--- "2Dkuzmin (small)" input @ InputData/fut_2Dkuzmin_1000000.in
+-- "2DinCube (small)" input @ ../InputData/fut_2DinCube_1000000.in
+-- "2Dkuzmin (small)" input @ ../InputData/fut_2Dkuzmin_1000000.in
 
