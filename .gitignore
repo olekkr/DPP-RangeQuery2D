@@ -17,3 +17,7 @@ InputData/*
 # tools
 tools/pbbs2fut
 tools/randPoints
+
+
+#legacy
+rangeQuery2d_grid/InputData/*
