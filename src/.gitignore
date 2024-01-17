@@ -1,3 +1,6 @@
 *.c
+benchmark_all
 bruteforce
 bruteforce_parallel
+rangeQuery2d_quadtree
+rangeQuery2d_pt_elim
