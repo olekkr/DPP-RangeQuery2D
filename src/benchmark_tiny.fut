@@ -1,11 +1,4 @@
-import "common"
 import "benchmarking"
-
-module brute = import "bruteforce"
-module para = import "bruteforce_parallel"
-module p_elim = import "rangeQuery2d_pt_elim"
-module grid = import "rangeQuery2d_grid"
-
 
 -- entry functions:
 entry bench_brute [n_in] (points_in : [n_in][2]f64) : []i64 =
@@ -27,9 +20,9 @@ entry bench_point_grid [n_in] (points_in : [n_in][2]f64) : []i64 =
 
 
 
+
 -- ### BENCHMARKING UNIT ### --
 -- ==
 -- entry: bench_simple_parallel bench_point_elimination bench_point_grid
--- "2DinCube (small)" input @ ../InputData/fut_2DinCube_1000000.in
--- "2Dkuzmin (small)" input @ ../InputData/fut_2Dkuzmin_1000000.in
+-- "2DinCube (small)" input @ ../InputData/fut_2DinCube_10000.in
 

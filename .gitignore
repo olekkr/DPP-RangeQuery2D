@@ -21,3 +21,4 @@ tools/randPoints
 
 #legacy
 rangeQuery2d_grid/InputData/*
+src/benchmark_tiny
