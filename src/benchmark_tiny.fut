@@ -24,5 +24,5 @@ entry bench_point_grid [n_in] (points_in : [n_in][2]f64) : []i64 =
 -- ### BENCHMARKING UNIT ### --
 -- ==
 -- entry: bench_simple_parallel bench_point_elimination bench_point_grid
--- "2DinCube (small)" input @ ../InputData/fut_2DinCube_10000.in
+-- "2DinCube (small)" input @ ../InputData/fut_2DinCube_1000.in
 
