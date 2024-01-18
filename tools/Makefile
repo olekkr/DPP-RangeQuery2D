@@ -11,30 +11,30 @@ pbbs2fut: pbbs2fut.c
 
 
 
-# randpoints 
-randPoints : randPoints.C geometryData.h $(COMMON) 
+# randpoints
+randPoints : randPoints.C geometryData.h $(COMMON)
 	g++ -DHOMEGROWN -pthread -mcx16 -O2 -g -std=c++17 -DNDEBUG -I . -DHOMEGROWN -pthread -ldl -L/usr/lib -ljemalloc -o  $@ $@.C
 
 
 # datasets
 2Dkuzmin_10M : randPoints
 	./randPoints -k -d 2 10000000 $@
-	mv $@ ../InputData
+	mv $@ ../InputData/
 
 2Dkuzmin_% : randPoints
 	./randPoints -k -d 2 $(subst 2Dkuzmin_,,$@) $@
-	mv $@ ../InputData
+	mv $@ ../InputData/
 
 2DinCube_10M : randPoints
 	./randPoints -d 2 10000000 $@
-	mv $@ ../InputData
+	mv $@ ../InputData/
 
 2DinCube_% : randPoints
 	./randPoints -d 2  $(subst 2DinCube_,,$@) $@
-	mv $@ ../InputData
+	mv $@ ../InputData/
 
 
-# fut datasets 
+# fut datasets
 fut_2Dkuzmin_10M.in : 2Dkuzmin_10M pbbs2fut
 	cat ../InputData/2Dkuzmin_10M | ./pbbs2fut > ../InputData/$@
 
