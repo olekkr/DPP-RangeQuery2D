@@ -127,6 +127,17 @@ def points_in_cells_reduce [n] (c1 : Cell [n]) (c2 : Cell [n]) : Cell [n] =
     let c = {rectangle = r, p_in = p_in}
     in c
 
+def points_in_cells_reduce_bis [n] (c1 : Cell [n]) (c2 : Cell [n]) : Cell [n] = 
+    
+    let r_ll = { x = 0, y = 0}
+    let r_ur = { x = 0, y = 0}
+    let r = {ll = r_ll, ur = r_ur}
+
+    let p_in = map2(\c1_p c2_p -> if c1_p == 1 || c2_p == 1 then 1 else -1) c1.p_in c2.p_in
+    
+    let c = {rectangle = r, p_in = p_in}
+    in c
+
 -- This function returns an array of flag with a 1 at each points in \cup cs, -1 otherwise
 def points_in_cells [n][m] (cs : [m]Cell [n]) : [n]i64 =
     
@@ -160,23 +171,66 @@ def get_subarray_point [n][m] (r : Rectangle) (grid : [m]Cell [n]) (P : [n]Point
     in subarray_point
     
 
+def get_subarray_cells_bis [n][m] (r : Rectangle) (grid : [m]Cell [n]) : []Cell [n] =
+
+    let cells_flags_to_consider = rect_cross_cells r grid
+
+    let cells_scatter_sz_helper = map(\f -> if f == 1 then 1 else  0) cells_flags_to_consider
+    let cells_scatter_sz = reduce (+) 0  cells_scatter_sz_helper
+
+    let cells_scatter_helper = map2(\f i -> if f == 1 then i else -1)  cells_flags_to_consider (iota m)
+    let dest = map(\_ -> grid[0]) (iota cells_scatter_sz)
+    let cells_to_consider = scatter dest cells_scatter_helper grid
+
+    in cells_to_consider
+
+-- This function returns the subarray of points to consider to then brute force
+def get_subarray_point_bis [n][m] (cells : [m]Cell [n]) (P : [n]Point) : []Point =
+
+    let points_flags_to_consider = points_in_cells cells  
+
+    let points_scatter_sz_helper = map(\f -> if f == 1 then 1 else  0) points_flags_to_consider
+    let points_scatter_sz = reduce (+) 0  points_scatter_sz_helper
+
+    let points_scatter_helper = map2(\f i -> if f == 1 then i else -1)  points_flags_to_consider (iota n)
+    let dest = map(\_ -> P[0]) (iota points_scatter_sz)
+
+    let subarray_point = scatter dest points_scatter_helper P
+
+    in subarray_point
+
 -- This function returns an array with the number of points in the rectangle at this index
 def rangeQuery2d_grid [m] [n] (depth : i64) (rectangles : [m]Rectangle) (points : [n]Point) : [m]i64 =
 
     let d = depth
-    let cells = preprocess_create_grid_depth d points -- correct till there for sure
+    let cells = preprocess_create_grid_depth d points
 
 
     let solution =  map(\r -> 
-                        let subarray_pts : []Point = get_subarray_point r cells points
+                        let subarray_pts : []Point = get_subarray_point r cells points -- This function must be optimized to make it quick
                         in nb_points_in_rectangle r subarray_pts 
                     ) rectangles
     in solution
 
+-- This function returns an array with the number of points in the rectangle at this index
+def rangeQuery2d_grid_bis [m] [n] (depth : i64) (rectangles : [m]Rectangle) (points : [n]Point) : [m]i64 =
+
+    let d = depth
+    let cells = preprocess_create_grid_depth d points
+
+
+    let solution =  map(\r -> 
+                        let cells_to_consider : []Cell[n] = get_subarray_cells_bis r cells
+                        let subarray_pts : []Point = get_subarray_point_bis cells_to_consider points 
+                        in nb_points_in_rectangle r subarray_pts 
+                    ) rectangles
+    in solution
 
 -- ### BENCHMARKING UNIT ### --
 -- ==
--- entry: bench_rangeQuery2d_grid
+-- entry: bench_rangeQuery2d_grid_bis
+-- input @InputData/fut/test_small_10000.in
+
 -- "2DinCube (small), d=3" input @InputData/fut/fut_2DinCube_1000000.in
 -- "2Dkuzmin (small), d=3" input @InputData/fut/fut_2Dkuzmin_1000000.in
 -- "2DinCube (large), d=3" input @InputData/fut/fut_2DinCube_10M.in
@@ -193,7 +247,7 @@ def mk_rects [n] (points_in : [n]Point) : []Rectangle =
 
 entry bench_rangeQuery2d_grid [n_in] (points_in : [n_in][2]f64) : []i64 =
 
-    let d = 3
+    let d = 1
 
     let m = 2 * (n_in/3)
     let ps_in = map(\ps -> {x = ps[0], y = ps[1]})points_in
@@ -202,3 +256,42 @@ entry bench_rangeQuery2d_grid [n_in] (points_in : [n_in][2]f64) : []i64 =
     let ps = ps_in[m:]
 
     in rangeQuery2d_grid d rs ps
+
+entry bench_rangeQuery2d_grid_bis [n_in] (points_in : [n_in][2]f64) : []i64 =
+
+    let d = 1
+
+    let m = 2 * (n_in/3)
+    let ps_in = map(\ps -> {x = ps[0], y = ps[1]})points_in
+
+    let rs = mk_rects ps_in[:m]
+    let ps = ps_in[m:]
+
+    in rangeQuery2d_grid_bis d rs ps
+
+
+
+def p0 : Point = {x = 0.0, y = 0.0}
+def p1 : Point = {x = 0.25, y = 0.5}
+def p2 : Point = {x = 0.5, y = 0.25}
+def p3 : Point = {x = 0.75, y = 0.5}
+def p4 : Point = {x = 0.5, y = 0.75}
+def p5 : Point = {x = 0.4, y = 0.5}
+def p6 : Point = {x = 0.5, y = 0.4}
+def p7 : Point = {x = 0.6, y = 0.5}
+def p8 : Point = {x = 0.5, y = 0.6}
+def p9 : Point = {x = 0.5, y = 0.5}
+
+def p10 : Point = {x = 0.25, y = 0.25}
+def p11 : Point = {x = 0.75, y = 0.25}
+def p12 : Point = {x = 0.75, y = 0.75}
+def p13 : Point = {x = 0.25, y = 0.75}
+def p14 : Point = {x = 0.33, y = 0.33}
+
+def ll : Point = {x = 0.4, y = 0.6}
+def ur : Point = {x = 0.6, y = 0.4}
+def r : Rectangle = {ll = ll, ur = ur}
+
+def R : []Rectangle = [r]
+-- def P : []Point = [p0, p1, p2, p3, p6, p7, p10, p11, p8, p9, p4, p5, p12, p13]
+def P : []Point = [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14]
