@@ -20,6 +20,6 @@ entry bench_point_grid_bis [n_in] (points_in : [n_in][2]f64) : []i64 =
 
 -- ### BENCHMARKING UNIT ### --
 -- ==
--- entry: bench_simple_parallel bench_point_grid bench_point_grid_bis
+-- entry: bench_simple_parallel  bench_point_grid bench_point_grid_bi
 -- "2DinCube (small)" input @ ../InputData/fut_2DinCube_1000.in
 
