@@ -2,8 +2,8 @@ import "common"
 
 module brute = import "bruteforce"
 module para = import "bruteforce_parallel"
-module p_elim = import "rangeQuery2d_pt_elim"
 module grid = import "rangeQuery2d_grid"
+module grid_bis = import "rangeQuery2d_grid_bis"
 
 -- helper functions for data
 def mk_rect (ll : Point) (ur : Point) : Rectangle = {ll = ll, ur = ur}

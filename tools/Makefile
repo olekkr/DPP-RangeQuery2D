@@ -48,5 +48,11 @@ fut_2DinCube_%.in : 2DinCube_% pbbs2fut
 	cat ../InputData/$< | ./pbbs2fut > ../InputData/$@
 
 
-bench_all : fut_2DinCube_1000000.in fut_2Dkuzmin_1000000.in
+bench_all_c : fut_2DinCube_1000000.in fut_2Dkuzmin_1000000.in
+	cd ../src; futhark bench -r 1 --backend=c benchmark_all.fut
+
+bench_all_multicore : fut_2DinCube_1000000.in fut_2Dkuzmin_1000000.in
 	cd ../src; futhark bench -r 1 --backend=multicore benchmark_all.fut
+	
+bench_all_opencl : fut_2DinCube_1000000.in fut_2Dkuzmin_1000000.in
+	cd ../src; futhark bench -r 1 --backend=opencl benchmark_all.fut
